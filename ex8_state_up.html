@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <!-- compilation JSX => JS -->
+    <script type="text/babel">
+
+    class App extends React.Component{
+        
+        constructor(props) {
+            super(props);
+            this.state = { 
+                valeurBinaire: '',
+                valeurDecimal: ''
+            }
+        }
+
+        changeValue = (value) => {
+            this.setState({
+                valeurBinaire: (value-0).toString(2),
+                valeurDecimal: parseInt(value,10)
+            })
+
+        }
+
+        render(){
+
+            const { valeurBinaire, valeurDecimal } = this.state ;
+
+            return (
+                <div>
+                    <BaseNumberInput number={valeurDecimal} changeFct={this.changeValue} type="decimal"/>
+                    <BaseNumberInput number={valeurBinaire} changeFct={this.changeValue} type="binaire"/>
+                </div>
+            );
+        }
+
+    }
+
+    
+    class BaseNumberInput extends React.Component {
+        
+
+        handleChange = (event) => {
+            let value = event.target.value;
+            if( Number.isNaN( parseInt( value ) )  === true  ) { 
+                value = 0
+            };
+            this.props.changeFct(value)
+        }
+
+
+        render() {
+            return (
+                <div>
+                    {this.props.type}<input value={this.props.number} onChange={this.handleChange}/>                 
+                </div>
+            );
+        }
+
+        
+    }
+
+
+    // TODO
+    
+    const container = document.getElementById('root');
+    
+
+    ReactDOM.render(
+        <App />,
+        container
+    );
+
+
+    
+    </script>
+</body>
+</html>

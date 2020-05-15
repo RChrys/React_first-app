@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <!-- compilation JSX => JS -->
+    <script type="text/babel">
+
+    class App extends React.Component{
+        
+        constructor(props) {
+            super(props);
+        }
+
+        render(){
+            return (
+                <div>
+                    <Compteur incrementation={1} reset={true}/>
+                    <Compteur incrementation={2}/>
+                </div>
+            );
+        }
+
+    }
+    
+    class Compteur extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                comptValue: 0,
+                stateButton: true
+            }
+            
+        }
+
+        click = () => {
+            this.setState({
+                comptValue: this.state.comptValue + this.props.incrementation,
+                stateButton: !this.state.stateButton
+            })
+        }
+
+        stop = () =>{
+            this.setState({
+                comptValue: this.state.comptValue,
+                stateButton: !this.state.stateButton
+            })
+        }
+
+        reset = () =>{
+            this.setState({
+                comptValue: 0,
+                stateButton: true
+            })
+        }
+        
+        render() {
+            return (
+                <div>
+                    <button name="Start" onClick={this.click} disabled={!this.state.stateButton}>Start(+{this.props.incrementation})</button>
+                    <button name="Stop" onClick={this.stop} disabled={this.state.stateButton}>Stop</button>
+                    {this.props.reset && <button name="Reset" onClick={this.reset}>Reset</button>}
+                    <p>{this.state.comptValue}</p>
+                </div>
+            )
+        }
+
+        componentDidMount(){
+            console.log('Component mounted');
+        }
+
+        componentDidUpdate(){
+            console.log('Render is updated');
+        }
+
+        componentWillUnmount(){
+            console.log('Component is unmounted');
+            
+        }
+    }
+
+    // TODO
+    
+    const container = document.getElementById('root');
+    
+
+    ReactDOM.render(
+        <App />,
+        container
+    );
+
+
+    
+    </script>
+</body>
+</html>

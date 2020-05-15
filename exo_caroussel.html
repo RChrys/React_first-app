@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <link rel="stylesheet" href="./assets/css/carousel.css">
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <!-- compilation JSX => JS -->
+    <script type="text/babel">
+
+    const SLIDES = [
+            { imageURL : "./assets/images/spade.jpg", description: "spade" },
+            { imageURL : "./assets/images/heart.png", description: "heart" },
+            { imageURL : "./assets/images/clover.png", description: "clover" }
+        ];
+
+
+    class App extends React.Component{
+        
+        constructor(props) {
+            super(props);
+        }
+
+        render(){
+            return (<SlideShow slides={SLIDES}/>);
+        }
+
+        
+    }
+    
+    class SlideShow extends React.Component{
+        constructor(props){
+            super(props);
+            this.slidesLength = this.props.slides.length
+            this.timer
+            this.state = {
+                activeSlide: 0
+            }
+        }
+
+        prevSlide(){
+            if(this.state.activeSlide===0){
+                this.setState({
+                    activeSlide: this.slidesLength - 1
+                })
+            }
+            else{
+                this.setState({
+                    activeSlide: this.state.activeSlide - 1
+                })
+            }
+        }
+
+        nextSlide(){
+
+        }
+        
+        render() {
+            return (
+                <div className="slideshow">
+                    {this.props.slides.map((elem, i) => {
+                        return (
+                            <div key={i}>
+                                {this.state.activeSlide===i && <Slide dataId={i} image={elem.imageURL} desc={elem.description} {...this.props}/>}
+                            </div>
+                        ) 
+                    })}
+                </div>
+            )
+        }
+
+        componentDidMount(){
+            console.log('Component is mounted');
+            this.timer = setInterval(() => {
+                if(this.state.activeSlide >= this.slidesLength-1){
+                    this.setState({
+                        activeSlide: 0
+                    })
+                }
+                else{
+                    this.setState({
+                        activeSlide: this.state.activeSlide + 1
+                    })
+                }
+                
+            }, 4000);
+        }
+
+        componentDidUpdate(){
+            console.log('Render is updated');
+        }
+
+        componentWillUnmount(){
+            console.log('Component is unmounted');
+            clearInterval(this.timer)
+        }
+    }
+
+    class Slide extends React.Component{
+        constructor(props){
+            super(props);
+            
+        }
+        
+        render() {
+            return (
+                
+                <div className="slide">
+                    <img
+                        src={this.props.image}
+                        alt={this.props.desc}
+                        index={this.props.dataId}/>
+                        
+                        <p>{this.props.desc}</p>
+                </div>
+            )
+        }
+
+        
+    }
+
+    // TODO
+    
+    const container = document.getElementById('root');
+    
+
+    ReactDOM.render(
+        <App />,
+        container
+    );
+
+
+    
+    </script>
+</body>
+</html>

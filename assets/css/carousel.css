@@ -1,0 +1,16 @@
+.slideshow{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.slide{
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+
+}
+
+.slide img{
+    height: 100%;
+}

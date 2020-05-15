@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <!-- compilation JSX => JS -->
+    <script type="text/babel">
+
+    class App extends React.Component{
+        
+        constructor(props) {
+            super(props);
+        }
+
+        render(){
+            return (
+                <div>
+                    <UserForm/>
+                </div>
+            );
+        }
+
+    }
+
+    const USERS = [         
+        {
+            name:"CHRYS", email:"chrys@chrys.com", mdp:"dino7"
+        }
+    ]
+
+
+    
+    class UserForm extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { 
+                emailValue: '',
+                mdpValue: '',
+                listUsers: USERS,
+                error: null,
+                success: null               
+            }
+        }
+
+        handleChange = (event) => {
+            //this.setState({userValue: event.target.value.toUpperCase()});
+            if(event.target.type==="email"){
+                this.setState({
+                    emailValue: event.target.value
+                })
+            }
+            else if(event.target.type==="password"){
+                this.setState({
+                    mdpValue: event.target.value
+                })
+            }
+            
+        }
+
+        handleSubmit = (event) => {
+            event.preventDefault();
+            if(!this.state.emailValue){
+                this.setState({
+                    error: `Type email at least`,
+                    success: ''
+                })
+                return
+            }
+            else if(!this.state.mdpValue){
+                this.setState({
+                    error: `Type password at least`,
+                    success: ''
+                })
+                return
+            }
+
+            for(let n = 0; n < this.state.listUsers; n++){
+                if(this.state.emailValue===this.state.listUsers[n].email && this.state.mdpValue===this.state.listUsers[n].mdp){
+                    this.setState({
+                        success: "Success"
+                    })
+                    return
+                }
+            }
+            this.setState({
+                error: `email or password invalid`,
+                success: ''
+            })
+        }
+
+    render() {
+        return (
+            <div>
+                {this.state.success}
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label>Email address</label>
+                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" onChange={this.handleChange}/>
+                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" onChange={this.handleChange}/>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit</button>
+                </form>
+                {this.state.error}
+                
+                
+
+
+                
+
+
+            </div>
+        );
+    }
+    }
+
+
+    // TODO
+    
+    const container = document.getElementById('root');
+    
+
+    ReactDOM.render(
+        <App />,
+        container
+    );
+
+
+    
+    </script>
+</body>
+</html>

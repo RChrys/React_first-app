@@ -22,8 +22,7 @@
 
         render(){
             return (
-               
-                
+                <SlideShow/>                
             )
         }
     }
@@ -37,25 +36,16 @@
         render(){
             return(
                 <div>
-                    
+                    <div className="loading">
+                        <Loading/>
+                    </div>
+                    <div class="view">
+                        <View/>
+                    </div>
                 </div>
             )
         }
 
-    }
-
-    class Layer extends React.Component{
-        constructor(props){
-            super(props)
-        }
-
-        render(){
-            return(
-                <div>
-                    
-                </div>
-            )
-        }
     }
 
     class Loading extends React.Component{

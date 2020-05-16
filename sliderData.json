@@ -1,0 +1,31 @@
+{
+    "path": "",
+    "extension": "jpg",
+    "full_folder":"full",
+    "thumb_folder": "thumbnails",
+    "images": [{
+            "id": 0,
+            "name":"city"
+        },
+        {
+            "id": 1,
+            "name":"field175959_1920"
+        },
+        {
+            "id": 2,
+            "name":"idaho239691_1920"
+        },
+        {
+            "id": 3,
+            "name":"road220058"
+        },
+        {
+            "id": 4,
+            "name":"trainyard-1"
+        },
+        {
+            "id": 5,
+            "name":"tuscany428041"
+        }
+    ]
+}

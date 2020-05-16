@@ -45,6 +45,7 @@
 
         onLoad = (datajson) => {
             this.dataJson = datajson
+            console.log(this.dataJson)
             this.setState({
                 preloaded: true
             })
@@ -53,11 +54,11 @@
         render(){
             return(
                 <div>
-                    <div className={"layer" + (this.state.preloaded ? "hide" : "")}>
+                    <div className={"layer " + (this.state.preloaded ? "hide" : "")}>
                         <Loading url={this.url} onload={this.onLoad}/>
                     </div>
                     <div className="layer content">
-                        <View/>
+                        <View data={this.dataJson}/>
                     </div>
                 </div>
             )
@@ -89,9 +90,7 @@
                     image.loaded = false
                     const img = new Image()
                     img.src = `${this.data.path}/${this.data.full_folder}/${image.name}.${this.data.extension}?raw=true`
-                    console.log("je passe la")
                     img.onload = () => {
-                        console.log("je passe ici")
                         image.loaded = true
                         this.checkImagesLoaded()
                     }
@@ -129,8 +128,14 @@
 
         render(){
             return(
-                <div>
-                    
+                <div className="view">
+                    <Arrows/>
+                    <div className="container">
+                        <ImageList data={this.props.data} size="full" />
+                    </div>
+                    <div className="controls">
+                    <Controls />
+                    </div>
                 </div>
             )
         }
@@ -170,11 +175,35 @@
         }
 
         render(){
-            return(
-                <div>
-                    
-                </div>
-            )
+            let jsx = (
+                <ul
+                    className={`imagelist ${this.props.size}`}
+                    style={{ left: 0 }}
+                ></ul>
+            );
+            if(this.props.data){
+                jsx = (
+                    <div>
+                        <ul className={`imagelist ${this.props.size}`}>
+                        {this.props.data.images.map((image, k) => {
+                            return (
+                            <li
+                                key={k}
+                            >
+                                <img
+                                src={`${this.props.data.path}/${
+                                    this.props.data[this.props.size + "_folder"]
+                                }/${image.name}.${this.props.data.extension}?raw=true`}
+                                />
+                            </li>
+                            );
+                        })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            return jsx;
         }
     }
     // TODO

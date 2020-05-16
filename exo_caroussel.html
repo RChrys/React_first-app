@@ -38,7 +38,7 @@
             this.dataJson = null
             this.state = {
                 preloaded: false,
-                current: 0
+                activeImage: 0
             }
             
         }
@@ -53,12 +53,12 @@
 
         render(){
             return(
-                <div>
+                <div className="etape2">
                     <div className={"layer " + (this.state.preloaded ? "hide" : "")}>
                         <Loading url={this.url} onload={this.onLoad}/>
                     </div>
                     <div className="layer content">
-                        <View data={this.dataJson}/>
+                        <View data={this.dataJson} activeimg={this.state.activeImage}/>
                     </div>
                 </div>
             )
@@ -131,7 +131,7 @@
                 <div className="view">
                     <Arrows/>
                     <div className="container">
-                        <ImageList data={this.props.data} size="full" />
+                        <ImageList data={this.props.data} size="full" activeimg={this.props.activeimg} />
                     </div>
                     <div className="controls">
                     <Controls />
@@ -148,8 +148,9 @@
 
         render(){
             return(
-                <div>
-                    
+                <div className="arrows">
+                    <button className="arrow left"></button>
+                    <button className="arrow right"></button>
                 </div>
             )
         }
@@ -172,6 +173,9 @@
     class ImageList extends React.Component{
         constructor(props){
             super(props)
+            this.state = {
+                size: this.props.size === "full"? [1600,600]:[80,80]
+            }
         }
 
         render(){
@@ -181,25 +185,35 @@
                     style={{ left: 0 }}
                 ></ul>
             );
+
             if(this.props.data){
+                let style = {};
+
+                if (this.props.size !== "thumb") {
+                    style = {
+                    width: this.props.data.images.length * this.state.size[0],
+                    left: this.props.activeimg
+                        ? -this.props.activeimg * this.state.size[0]
+                        : 0
+                    };
+                }
                 jsx = (
-                    <div>
-                        <ul className={`imagelist ${this.props.size}`}>
-                        {this.props.data.images.map((image, k) => {
-                            return (
-                            <li
-                                key={k}
-                            >
-                                <img
-                                src={`${this.props.data.path}/${
-                                    this.props.data[this.props.size + "_folder"]
-                                }/${image.name}.${this.props.data.extension}?raw=true`}
-                                />
-                            </li>
-                            );
-                        })}
-                        </ul>
-                    </div>
+                    <ul className={`imagelist ${this.props.size}`} style={style}>
+                    {this.props.data.images.map((image, k) => {
+                        return (
+                        <li
+                            key={k}
+                            className={this.props.activeimg === k ? "active" : ""}
+                        >
+                            <img
+                            src={`${this.props.data.path}/${
+                                this.props.data[this.props.size + "_folder"]
+                            }/${image.name}.${this.props.data.extension}?raw=true`}
+                            />
+                        </li>
+                        );
+                    })}
+                    </ul>
                 )
             }
 

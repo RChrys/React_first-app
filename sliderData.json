@@ -3,29 +3,22 @@
     "extension": "jpg",
     "full_folder":"full",
     "thumb_folder": "thumbnails",
-    "images": [{
-            "id": 0,
-            "name":"Desktop-wallpaper-slideshow-011"
-        },
+    "images": [
         {
-            "id": 1,
+            "id": 0,
             "name":"field175959_1920"
         },
         {
-            "id": 2,
+            "id": 1,
             "name":"idaho239691_1920"
         },
         {
-            "id": 3,
+            "id": 2,
             "name":"road220058"
         },
         {
-            "id": 4,
+            "id": 3,
             "name":"trainyard-1"
-        },
-        {
-            "id": 5,
-            "name":"tuscany428041"
         }
     ]
 }

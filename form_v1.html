@@ -41,10 +41,6 @@
             }
 
 
-
-
-
-
         class App extends React.Component{
             
             constructor(props) {
@@ -63,18 +59,17 @@
                                 <Input type="email" obligatoire={true} label="votre email" />
                             </Wrapper>
                             <Wrapper>
-                                <Question title={questions['react'].title}/>
+                                <Question title={questions['react'].title} reponse={questions['react'].choices[questions['react'].response]} />
                                 <Radio name={questions['react'].name} choices={questions['react'].choices}/>
                             </Wrapper>
                             <Wrapper>
-                                <Question title={questions['jsx'].title}/>
+                                <Question title={questions['jsx'].title} reponse={questions['jsx'].choices[questions['jsx'].response]}/>
                                 <Radio name={questions['jsx'].name} choices={questions['jsx'].choices}/>
                             </Wrapper>
                             <Wrapper>
-                                <Question title={questions['symfony'].title}/>
+                                <Question title={questions['symfony'].title } reponse={questions['symfony'].choices[questions['symfony'].response]}/>
                                 <Select name={questions['symfony'].name} choices={questions['symfony'].choices} multiple={false}/>
                             </Wrapper>
-                            
                         </Form>
                         {this.state.formSubmitted && <Resultat/>}
                     </div>
@@ -102,9 +97,6 @@
             
             constructor(props) {
                 super(props);
-                this.state = {
-                    formSubmitted : false
-                }
             }
 
             handleSubmit = () =>{
@@ -115,6 +107,7 @@
                 return(
                     <form onSubmit={this.handleSubmit}>
                         {this.props.children}
+                        <input type="submit" value="Submit" />
                     </form>
                 )
             }
@@ -129,6 +122,7 @@
         
 
             render(){
+                console.log(this.props.reponse)
                 return(
                     <h2>
                         {this.props.title}
@@ -182,7 +176,6 @@
             }
 
             render(){
-                console.log(this.props.choices)
                 return(
                     <div>
                         <p>Répondez en choisissant une seule et bonne réponse ci-dessous :</p>

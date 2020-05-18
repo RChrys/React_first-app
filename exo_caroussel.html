@@ -51,6 +51,27 @@
             })
         }
 
+        onImageClick = (event) =>{
+            this.setState({
+                    activeImage: parseInt(event.target.getAttribute("index"))
+                })
+        }
+
+        onAction = (event) =>{
+            if(event.target.className.includes("left")){
+                this.setState({
+                    activeImage: this.state.activeImage > 0 ? this.state.activeImage-1 : this.dataJson.images.length-1
+                })
+                console.log(this.state.activeImage)
+            }
+            else {
+                this.setState({
+                    activeImage: (this.state.activeImage+1)%this.dataJson.images.length
+                })
+                console.log(this.state.activeImage)
+            }
+        }
+
         render(){
             return(
                 <div className="etape2">
@@ -58,7 +79,10 @@
                         <Loading url={this.url} onload={this.onLoad}/>
                     </div>
                     <div className="layer content">
-                        <View data={this.dataJson} activeimg={this.state.activeImage}/>
+                        <View data={this.dataJson} activeimg={this.state.activeImage} onaction={this.onAction}/>
+                        <div className="controls">
+                            <Controls data={this.dataJson} activeimg={this.state.activeImage} imageclick={this.onImageClick}/>
+                        </div>
                     </div>
                 </div>
             )
@@ -105,8 +129,6 @@
 
                 this.props.onload(this.data);
             }
-
-
         }
 
   
@@ -129,13 +151,11 @@
         render(){
             return(
                 <div className="view">
-                    <Arrows/>
+                    <Arrows activeimg={this.props.activeimg} onaction={this.props.onaction}/>
                     <div className="container">
                         <ImageList data={this.props.data} size="full" activeimg={this.props.activeimg} />
                     </div>
-                    <div className="controls">
-                    <Controls />
-                    </div>
+                    
                 </div>
             )
         }
@@ -149,8 +169,8 @@
         render(){
             return(
                 <div className="arrows">
-                    <button className="arrow left"></button>
-                    <button className="arrow right"></button>
+                    <button className="arrow left" onClick={this.props.onaction}></button>
+                    <button className="arrow right" onClick={this.props.onaction}></button>
                 </div>
             )
         }
@@ -163,9 +183,9 @@
 
         render(){
             return(
-                <div>
-                    
-                </div>
+                <React.Fragment>
+                    <ImageList data={this.props.data} size="thumb" activeimg={this.props.activeimg} imageclick={this.props.imageclick} />
+                </React.Fragment>
             )
         }
     }
@@ -206,9 +226,15 @@
                             className={this.props.activeimg === k ? "active" : ""}
                         >
                             <img
-                            src={`${this.props.data.path}/${
-                                this.props.data[this.props.size + "_folder"]
-                            }/${image.name}.${this.props.data.extension}?raw=true`}
+                                index={k}
+                                style={{
+                                    width: this.state.size[0],
+                                    height: this.state.size[1]
+                                }}
+                                src={`${this.props.data.path}/${
+                                    this.props.data[this.props.size + "_folder"]
+                                }/${image.name}.${this.props.data.extension}?raw=true`}
+                                onClick={this.props.imageclick}
                             />
                         </li>
                         );

@@ -49,6 +49,9 @@
             
             constructor(props) {
                 super(props);
+                this.state = {
+                    formSubmitted : false
+                }
             }
 
             render(){
@@ -73,7 +76,7 @@
                             </Wrapper>
                             
                         </Form>
-                        <Resultat/>
+                        {this.state.formSubmitted && <Resultat/>}
                     </div>
                 )
                 
@@ -100,8 +103,7 @@
             constructor(props) {
                 super(props);
                 this.state = {
-                    formSubmitted : false,
-                    feedback : false
+                    formSubmitted : false
                 }
             }
 

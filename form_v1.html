@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello React</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <!-- compilation JSX => JS -->
+        <script type="text/babel">
+
+
+            const questions = {
+                'symfony' : {
+                    title : "Symfony design pattern",
+                    choices : ['MMV', 'MVC', 'MMVV'],
+                    response : 1,
+                    type : "select",
+                    name : "symfony",
+                    feedback : 'Symfony est basé sur le pattern MVC'
+                },
+                'react' : {
+                    title : "React est-il un framework ?",
+                    choices : ['yes', 'no'],
+                    response : 1,
+                    type : "radio",
+                    name : "react",
+                    feedback : "React est une librairie"
+                },
+                'jsx' : {
+                    title : "JSX c'est quoi ?",
+                    choices : ['JSX est un langage compilé', 'JSX est un sur-ensemble développé par Facebook'],
+                    response : 1,
+                    type: "radio" ,
+                    name : "jsx",
+                    feedback : 'JSX est un sur ensemble à JS'
+                }
+            }
+
+
+
+
+
+
+        class App extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div>
+                        <Form>
+                            <Wrapper>
+                                <h1>QCM React</h1>
+                                <Input type="email" obligatoire={true} label="votre email" />
+                            </Wrapper>
+                            <Wrapper>
+                                <Question title={questions['react'].title}/>
+                                <Radio name={questions['react'].name} choices={questions['react'].choices}/>
+                            </Wrapper>
+                            <Wrapper>
+                                <Question title={questions['jsx'].title}/>
+                                <Radio name={questions['jsx'].name} choices={questions['jsx'].choices}/>
+                            </Wrapper>
+                            <Wrapper>
+                                <Question title={questions['symfony'].title}/>
+                                <Select name={questions['symfony'].name} choices={questions['symfony'].choices} multiple={false}/>
+                            </Wrapper>
+                            
+                        </Form>
+                        <Resultat/>
+                    </div>
+                )
+                
+            }
+        }
+
+        class Wrapper extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div className=".wrapper">
+                        {this.props.children}
+                    </div>
+                )
+            }
+        }
+
+        class Form extends React.Component{
+            
+            constructor(props) {
+                super(props);
+                this.state = {
+                    formSubmitted : false,
+                    feedback : false
+                }
+            }
+
+            handleSubmit = () =>{
+
+            }
+
+            render(){
+                return(
+                    <form onSubmit={this.handleSubmit}>
+                        {this.props.children}
+                    </form>
+                )
+            }
+        }
+
+        class Question extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+        
+
+            render(){
+                return(
+                    <h2>
+                        {this.props.title}
+                    </h2>
+                )
+            }
+        }
+
+        class Input extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div>
+                        <label htmlFor={this.props.label}>{this.props.label}</label>
+                        <input type={this.props.typeInput} required={this.props.obligatoire}/>
+                    </div>
+                )
+            }
+        }
+
+        class Select extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div>
+                        <select multiple={this.props.multiple}>
+                            <option value="">--Please choose an option--</option>
+                            {this.props.choices.map((choice,i) => {
+                            return(
+                                <option key={i} value={choice}>{choice}</option>
+                            )
+                        })}
+                        </select>
+                    </div>
+                )
+            }
+        }
+
+        class Radio extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                console.log(this.props.choices)
+                return(
+                    <div>
+                        <p>Répondez en choisissant une seule et bonne réponse ci-dessous :</p>
+                        {this.props.choices.map((choice,i) => {
+                            return(
+                                <div key={i} >
+                                    <input type="radio" name={this.props.name} id={choice} value={choice}/>
+                                    <label htmlFor={choice}>{choice}</label>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )
+            }
+        }
+
+        class Resultat extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div>
+                    
+                    </div>
+                )
+            }
+        }
+
+        const container = document.getElementById('root');
+        
+
+        ReactDOM.render(
+            <App />,
+            container
+        );
+
+
+        
+        </script>
+    </body>
+</html>

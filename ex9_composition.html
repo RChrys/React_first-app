@@ -36,7 +36,9 @@
             }
 
             handleChange = (event) => {
-                this.setState({userValue: event.target.value});
+                this.setState({
+                    userValue: event.target.value
+                });
             }
 
             handleSubmit = (event) => {
@@ -53,12 +55,20 @@
                     console.log(this.state.userList)
                     this.setState({
                         userValue: '',
-                        userList: users,
-                        userId : users.length + 1
+                        userList: this.state.userList,
+                        userId : this.state.userList.length + 1
                     })
                 }
             }
 
+            shuffle = () => {
+                this.state.userList.sort(() => Math.random() - 0.5);
+                this.setState({
+                    userList : this.state.userList
+                })
+            }
+
+        
             render(){
                 return (
                     <div>
@@ -74,6 +84,7 @@
                             </div>
                             <User userlist={this.state.userList} />
                         </Dashboard>
+                        <button onClick ={this.shuffle}></button>
                     </div>
                 );
             }
@@ -100,18 +111,32 @@
                 super(props);
             }
 
+            handleMouseOver = () =>{
+                    style = {
+                        backgroundColor : '#000',
+                        color : '#fff'
+                    }
+                }
+
+            handleMouseOut = () =>{
+                style = {
+                    backgroundColor : '#fff',
+                    color : '#000'
+                }
+            }
 
             render(){
+                let style = {}
                 return(
-                    <div>
+                    <ul>
                         {this.props.userlist.map((elem, i) => {
                             return (
-                                <p key={i}>
+                                <li key={i} style={style} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
                                     {elem.id}/{elem.name}
-                                </p>
+                                </li>
                             ) 
                         })}
-                    </div>
+                    </ul>
                 )
             }
         }

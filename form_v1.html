@@ -46,9 +46,13 @@
             constructor(props) {
                 super(props);
                 this.questions = []
+                this.nbrQuestion = 0
+                this.nbrAnwser = 0
                 this.state = {
                     formSubmitted : false,
-                    propositions : {}
+                    propositions : {},
+                    questionCount : 0,
+                    answerCount : 0
                 }
                 this.componentType = {
                     input : Input,
@@ -61,6 +65,13 @@
                 }
             }
 
+            addQuestion = () =>{
+                this.nbrQuestion++
+                this.setState({
+                    questionCount : this.nbrQuestion
+                })
+            }
+
             handleSubmit = (event) =>{
                 event.preventDefault()
                 this.setState({
@@ -71,9 +82,18 @@
             handleChange = (event) => {
                 let nam = event.target.name
                 let val = event.target.value
+                if(!this.state.propositions[nam]){
+                    this.nbrAnwser++
+                    this.setState({
+                        answerCount : this.nbrAnwser
+                    })
+                }
                 this.state.propositions[nam] = val
+                if(!this.state.propositions[nam]){
+
+                }
                 this.setState({
-                    propositformSubmittedions : this.state.propositions
+                    propositions : this.state.propositions
                 })
             }
 
@@ -89,7 +109,7 @@
                 return(
                     <div>
                         <p>Voici un QCM sur React répondez aux questions ci-dessous, pensez à laisser votre email, champ obligatoire (*) :</p>
-                        <Form handleSubmit={this.handleSubmit}>
+                        <Form handleSubmit={this.handleSubmit} btnDisabled={this.state.questionCount === this.state.answerCount ? false : true}>
                             <Wrapper>
                                 <h1>QCM React</h1>
                                 <Input type="email" obligatoire={true} label="votre email" />
@@ -98,12 +118,13 @@
                                 const ComponentName = this.componentType[question.type]
                                 return(
                                     <Wrapper key={k}>
-                                            <Question name={question.name} title={question.title} />
+                                            <Question name={question.name} title={question.title} handleQuestion={this.addQuestion} />
                                             <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
                                     </Wrapper>
                                 )
                             })}
                         </Form>
+                        Nombre de question : {this.state.questionCount}
                         {this.state.formSubmitted && <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.state.propositions}/>}
                     </div>
                 )
@@ -137,7 +158,7 @@
                 return(
                     <form onSubmit={this.props.handleSubmit}>
                         {this.props.children}
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Submit" disabled={this.props.btnDisabled === true ? true : false} />
                     </form>
                 )
             }
@@ -156,6 +177,10 @@
                         {this.props.title}
                     </h2>
                 )
+            }
+
+            componentDidMount(){
+                this.props.handleQuestion()
             }
         }
 

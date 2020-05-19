@@ -91,6 +91,7 @@
 
                 return(
                     <div>
+                        <p>Voici un QCM sur React répondez aux questions ci-dessous, pensez à laisser votre email, champ obligatoire (*) :</p>
                         <Form handleSubmit={this.handleSubmit}>
                             <Wrapper>
                                 <h1>QCM React</h1>
@@ -121,7 +122,7 @@
 
             render(){
                 return(
-                    <div className="wrapper">
+                    <div className={`wrapper ${this.props.className}`}>
                         {this.props.children}
                     </div>
                 )
@@ -169,8 +170,8 @@
 
             render(){
                 return(
-                    <div>
-                        <label htmlFor={this.props.label}>{this.props.label}</label>
+                    <div className={`input ${this.props.className}`}>
+                        <label htmlFor={this.props.label}>{this.props.label} {this.props.obligatoire ? "( * )" : "" }</label>
                         <input name={this.props.name} onChange={this.props.handleChange} type={this.props.typeInput} required={this.props.obligatoire}/>
                     </div>
                 )
@@ -185,7 +186,7 @@
 
             render(){
                 return(
-                    <div>
+                    <div className={`select ${this.props.className}`}>
                         <select name={this.props.name} onChange={this.props.handleChange} multiple={this.props.multiple} >
                             <option value="">--Please choose an option--</option>
                             {this.props.choices.map((choice,i) => {
@@ -207,7 +208,7 @@
 
             render(){
                 return(
-                    <div>
+                    <div className={`radio ${this.props.className}`}>
                         <p>Répondez en choisissant une seule et bonne réponse ci-dessous :</p>
                         {this.props.choices.map((choice,i) => {
                             return(

@@ -106,7 +106,7 @@
                                 )
                             })}
                         </Form>
-                        <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.state.propositions}/>
+                        {this.state.formSubmitted && <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.state.propositions}/>}
                     </div>
                 )
                 
@@ -246,7 +246,6 @@
             
 
             render(){
-                console.log(this.props.reponses)
                 this.propositionsArr = Object.keys(this.propositionsObj).map(function(key) {
                     return [key, this.propositionsObj[key]];
                 })
@@ -254,6 +253,7 @@
                 this.reponsesArr = Object.keys(this.reponses).map(function(key) {
                     return [key, this.reponses[key]];
                 })
+
                 
 
                 return(

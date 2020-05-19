@@ -48,6 +48,7 @@
                 this.questions = []
                 this.nbrQuestion = 0
                 this.nbrAnwser = 0
+                this.propositions = []
                 this.state = {
                     formSubmitted : false,
                     propositions : {},
@@ -82,19 +83,13 @@
             handleChange = (event) => {
                 let nam = event.target.name
                 let val = event.target.value
-                if(!this.state.propositions[nam]){
+                if(!this.propositions[nam]){
                     this.nbrAnwser++
                     this.setState({
                         answerCount : this.nbrAnwser
                     })
                 }
-                this.state.propositions[nam] = val
-                if(!this.state.propositions[nam]){
-
-                }
-                this.setState({
-                    propositions : this.state.propositions
-                })
+                this.propositions[nam] = val
             }
 
             render(){
@@ -124,7 +119,7 @@
                                 )
                             })}
                         </Form>
-                        {this.state.formSubmitted && <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.state.propositions}/>}
+                        {this.state.formSubmitted && <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.propositions}/>}
                     </div>
                 )
                 

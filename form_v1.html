@@ -209,7 +209,7 @@
                 return(
                     <div className={`select ${this.props.className ? `${this.props.className}` : ``}`}>
                         <select name={this.props.name} onChange={this.props.handleChange} multiple={this.props.multiple} >
-                            <option value="">--Please choose an option--</option>
+                            <option value="">--Choisissez une réponse--</option>
                             {this.props.choices.map((choice,i) => {
                             return(
                                 <option key={i} value={choice}>{choice}</option>

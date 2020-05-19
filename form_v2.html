@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello React</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <!-- compilation JSX => JS -->
+        <script type="text/babel">
+
+
+            const questions = {
+                'symfony' : {
+                    title : "Symfony design pattern",
+                    choices : ['MMV', 'MVC', 'MMVV'],
+                    response : 1,
+                    type : "select",
+                    name : "symfony",
+                    feedback : 'Symfony est basé sur le pattern MVC'
+                },
+                'react' : {
+                    title : "React est-il un framework ?",
+                    choices : ['yes', 'no'],
+                    response : 1,
+                    type : "radio",
+                    name : "react",
+                    feedback : "React est une librairie"
+                },
+                'jsx' : {
+                    title : "JSX c'est quoi ?",
+                    choices : ['JSX est un langage compilé', 'JSX est un sur-ensemble développé par Facebook'],
+                    response : 1,
+                    type: "radio" ,
+                    name : "jsx",
+                    feedback : 'JSX est un sur ensemble à JS'
+                }
+            }
+
+
+        class App extends React.Component{
+            
+            constructor(props) {
+                super(props);
+                this.questions = []
+                this.nbrQuestion = 0
+                this.nbrAnwser = 0
+                this.propositions = []
+                this.state = {
+                    formSubmitted : false,
+                    propositions : {},
+                    questionCount : 0,
+                    answerCount : 0,
+                    startBtnClicked : false,
+                    page : 0
+                }
+                this.componentType = {
+                    input : Input,
+                    select : Select,
+                    radio : Radio
+                }
+
+                for(let question in questions){  
+                    this.questions.push(questions[question])
+                }
+            }
+
+            addQuestion = () =>{
+                this.nbrQuestion++
+                this.setState({
+                    questionCount : this.nbrQuestion
+                })
+            }
+
+            prevPage = () =>{
+                event.preventDefault()
+                this.setState({
+                    page : this.state.page-1
+                })
+            }
+
+            nextPage = () =>{
+                event.preventDefault()
+                this.setState({
+                    page : this.state.page+1
+                })
+            }
+
+            handleStart = (event) =>{
+                event.preventDefault()
+                this.setState({
+                    startBtnClicked : true
+                })
+            }
+
+            handleSubmit = (event) =>{
+                event.preventDefault()
+                this.setState({
+                    formSubmitted : true
+                })
+            }
+
+            handleChange = (event) => {
+                let nam = event.target.name
+                let val = event.target.value
+                if(!this.propositions[nam]){
+                    this.nbrAnwser++
+                    this.setState({
+                        answerCount : this.nbrAnwser
+                    })
+                }
+                this.propositions[nam] = val
+            }
+
+            render(){
+                let reponseObj = {}
+                let feedbackObj = {}
+
+                for (const property in questions){
+                    reponseObj[property] = questions[property].choices[questions[property].response]
+                    feedbackObj[property] = questions[property].feedback
+                }
+
+                return(
+                    <div>
+                        {!this.state.startBtnClicked && <Form handleSubmit={this.handleStart} btnDisabled={false} btnValue="Start">
+                            <Wrapper index={0}>
+                                <p>Voici un QCM sur React répondez aux questions ci-dessous, pensez à laisser votre email, champ obligatoire (*) :</p>
+                                <h1>QCM React</h1>
+                                <Input type="email" obligatoire={true} label="votre email" />
+                            </Wrapper>
+                        </Form>
+                        }
+
+
+
+                        {this.state.startBtnClicked && <Form handleSubmit={this.handleSubmit} btnDisabled={this.questions.length === this.state.answerCount ? false : true} btnValue="Submit">
+                            {this.questions.map((question,k)=>{
+                                const ComponentName = this.componentType[question.type]
+                                return(
+                                    (this.state.page === k) && <Wrapper key={k} index={k+1}>
+                                        <Question name={question.name} title={question.title} handleQuestion={this.addQuestion} />
+                                        <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
+                                        {(!this.state.page <= 0) && <Input typeInput="button" value="Précédent" handleClick={this.prevPage}/>}
+                                        {(this.state.page !== this.questions.length-1) &&  <Input typeInput="button" value="Suivant" handleClick={this.nextPage}/> }
+                                    </Wrapper>
+                                )
+                            })}
+                        </Form>}
+                        {this.state.formSubmitted && <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.propositions}/>}
+                    </div>
+                )
+                
+            }
+        }
+
+        class Wrapper extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div className={`wrapper ${this.props.className ? `${this.props.className}` : ``}`} index={this.props.index}>
+                        {this.props.children}
+                    </div>
+                )
+            }
+        }
+
+        class Form extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+
+            render(){
+                return(
+                    <form onSubmit={this.props.handleSubmit}>
+                        {this.props.children}
+                        <input type="submit" value={this.props.btnValue} disabled={this.props.btnDisabled === true ? true : false} />
+                    </form>
+                )
+            }
+        }
+
+        class Question extends React.Component{
+            
+            constructor(props) {
+                super(props);
+                
+            }
+
+            render(){
+                return(
+                    <h2>
+                        {this.props.title}
+                    </h2>
+                )
+            }
+
+            componentDidMount(){
+                this.props.handleQuestion()
+            }
+        }
+
+        class Input extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div className={`input ${this.props.className ? `${this.props.className}` : ``}`}>
+                        {this.props.label && <label htmlFor={this.props.label}>{this.props.label} {this.props.obligatoire ? "( * )" : "" }</label>}
+                        <input name={this.props.name} value={this.props.value} onChange={this.props.handleChange} onClick={this.props.handleClick} type={this.props.typeInput} required={this.props.obligatoire}/>
+                    </div>
+                )
+            }
+        }
+
+        class Select extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div className={`select ${this.props.className ? `${this.props.className}` : ``}`}>
+                        <select name={this.props.name} onChange={this.props.handleChange} multiple={this.props.multiple} >
+                            <option value="">--Choisissez une réponse--</option>
+                            {this.props.choices.map((choice,i) => {
+                            return(
+                                <option key={i} value={choice}>{choice}</option>
+                            )
+                        })}
+                        </select>
+                    </div>
+                )
+            }
+        }
+
+        class Radio extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+            render(){
+                return(
+                    <div className={`radio ${this.props.className ? `${this.props.className}` : ``}`}>
+                        <p>Répondez en choisissant une seule et bonne réponse ci-dessous :</p>
+                        {this.props.choices.map((choice,i) => {
+                            return(
+                                <div key={i} >
+                                    <input type="radio" name={this.props.name} onChange={this.props.handleChange} id={choice} value={choice}/>
+                                    <label htmlFor={choice}>{choice}</label>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )
+            }
+        }
+
+        class Resultat extends React.Component{
+            
+            constructor(props) {
+                super(props);
+
+                this.propositionsArr = []
+                this.reponsesArr = []
+
+                this.state = {
+                    score : 0
+                }
+            }
+
+            checkScore = () =>{
+                let scoreTmp = 0
+                this.propositionsArr.forEach(elem => {
+                    if(elem[1] === this.props.reponses[elem[0]]){
+                        scoreTmp++
+                    }
+                    this.setState({
+                        score  : scoreTmp
+                    })
+                })
+            }
+
+            render(){
+                let propositions = this.props.propositions
+                this.propositionsArr = Object.keys(propositions).map(function(key) {
+                    return [key, propositions[key]];
+                })
+
+                let reponses = this.props.reponses
+                this.reponsesArr = Object.keys(reponses).map(function(key) {
+                    return [key, reponses[key]];
+                })
+
+                return(
+                    <div>
+                        Voici votre score pour ce QCM : {this.state.score}/{this.reponsesArr.length}
+                        {this.propositionsArr.map((proposition,i) => {
+                            return(
+                                <p key={i} >
+                                   Q{i+1} : {proposition[1] === reponses[proposition[0]] ? "Bravo ! vous avez bien répondu." : "Dommage ce n'est pas juste"} {this.props.feedbacks[proposition[0]]}
+                                </p>
+                            )
+                        })}
+                    </div>
+                )
+            }
+
+            componentDidMount(){
+                this.checkScore()
+            }
+        }
+
+        const container = document.getElementById('root');
+        
+
+        ReactDOM.render(
+            <App />,
+            container
+        );
+
+
+        
+        </script>
+    </body>
+</html>

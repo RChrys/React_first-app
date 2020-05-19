@@ -227,9 +227,7 @@
             constructor(props) {
                 super(props);
 
-                this.propositionsObj = this.props.propositions
                 this.propositionsArr = []
-                this.reponses = this.props.reponses
                 this.reponsesArr = []
 
                 this.state = {
@@ -238,31 +236,37 @@
             }
 
             checkScore = () =>{
+                let scoreTmp = 0
                 this.propositionsArr.forEach(elem => {
-                    console.log(elem)
+                    if(elem[1] === this.props.reponses[elem[0]]){
+                        scoreTmp++
+                    }
+                    this.setState({
+                        score  : scoreTmp
+                    })
                 })
             }
 
             
 
             render(){
-                this.propositionsArr = Object.keys(this.propositionsObj).map(function(key) {
-                    return [key, this.propositionsObj[key]];
+                let propositions = this.props.propositions
+                this.propositionsArr = Object.keys(propositions).map(function(key) {
+                    return [key, propositions[key]];
                 })
 
-                this.reponsesArr = Object.keys(this.reponses).map(function(key) {
-                    return [key, this.reponses[key]];
+                let reponses = this.props.reponses
+                this.reponsesArr = Object.keys(reponses).map(function(key) {
+                    return [key, reponses[key]];
                 })
-
-                
 
                 return(
                     <div>
                         Voici votre score pour ce QCM : {this.state.score}/{this.reponsesArr.length}
-                        {propositionsArr.map((proposition,i) => {
+                        {this.propositionsArr.map((proposition,i) => {
                             return(
                                 <p key={i} >
-                                   Q{i+1} : {proposition[1] === this.reponses[proposition[0]] ? "Bravo ! vous avez bien répondu." : "Dommage ce n'est pas juste"} {this.props.feedbacks[proposition[0]]}
+                                   Q{i+1} : {proposition[1] === reponses[proposition[0]] ? "Bravo ! vous avez bien répondu." : "Dommage ce n'est pas juste"} {this.props.feedbacks[proposition[0]]}
                                 </p>
                             )
                         })}
@@ -270,7 +274,7 @@
                 )
             }
 
-            compnentDidMount(){
+            componentDidMount(){
                 this.checkScore()
             }
         }

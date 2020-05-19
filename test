@@ -1,0 +1,14 @@
+for(let question in questions){  
+    this.questions.push(questions[question])
+}
+
+{this.questions.map((question,k)=>{
+    const ComponentName = question.type 
+    console.log(question.type)
+    return(
+        <Wrapper>
+                <Question name={question.name} title={question.title} />
+                <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
+        </Wrapper>
+    )
+})}

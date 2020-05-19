@@ -45,33 +45,68 @@
             
             constructor(props) {
                 super(props);
+                this.questions = []
                 this.state = {
-                    formSubmitted : false
+                    formSubmitted : false,
+                    propositions : {}
+                }
+                this.componentType = {
+                    input : Input,
+                    select : Select,
+                    radio : Radio
+                }
+
+                for(let question in questions){  
+                    this.questions.push(questions[question])
                 }
             }
 
+            handleSubmit = (event) =>{
+                event.preventDefault()
+                this.setState({
+                    formSubmitted : true
+                })
+            }
+
+            handleChange = (event) => {
+                let nam = event.target.name
+                let val = event.target.value
+                this.state.propositions[nam] = val
+                this.setState({
+                    propositformSubmittedions : this.state.propositions
+                })
+            }
+
             render(){
+                let reponseObj = {}
+                let feedbackObj = {}
+                let questionsArr = []
+
+                
+                
+                for (const property in questions){
+                    reponseObj[property] = questions[property].choices[questions[property].response]
+                    feedbackObj[property] = questions[property].feedback
+                }
+
                 return(
                     <div>
-                        <Form>
+                        <Form handleSubmit={this.handleSubmit}>
                             <Wrapper>
                                 <h1>QCM React</h1>
                                 <Input type="email" obligatoire={true} label="votre email" />
                             </Wrapper>
-                            <Wrapper>
-                                <Question title={questions['react'].title} reponse={questions['react'].choices[questions['react'].response]} />
-                                <Radio name={questions['react'].name} choices={questions['react'].choices}/>
-                            </Wrapper>
-                            <Wrapper>
-                                <Question title={questions['jsx'].title} reponse={questions['jsx'].choices[questions['jsx'].response]}/>
-                                <Radio name={questions['jsx'].name} choices={questions['jsx'].choices}/>
-                            </Wrapper>
-                            <Wrapper>
-                                <Question title={questions['symfony'].title } reponse={questions['symfony'].choices[questions['symfony'].response]}/>
-                                <Select name={questions['symfony'].name} choices={questions['symfony'].choices} multiple={false}/>
-                            </Wrapper>
+                            {this.questions.map((question,k)=>{
+                                const ComponentName = this.componentType[question.type]
+                                return(
+                                    <Wrapper key={k}>
+                                            <Question name={question.name} title={question.title} />
+                                            <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
+                                    </Wrapper>
+                                )
+                            })}
                         </Form>
-                        {this.state.formSubmitted && <Resultat/>}
+                        <Resultat reponses={reponseObj} feedbacks={feedbackObj} propositions={this.state.propositions}/>
                     </div>
                 )
                 
@@ -86,7 +121,7 @@
 
             render(){
                 return(
-                    <div className=".wrapper">
+                    <div className="wrapper">
                         {this.props.children}
                     </div>
                 )
@@ -99,13 +134,10 @@
                 super(props);
             }
 
-            handleSubmit = () =>{
-
-            }
 
             render(){
                 return(
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.props.handleSubmit}>
                         {this.props.children}
                         <input type="submit" value="Submit" />
                     </form>
@@ -117,12 +149,10 @@
             
             constructor(props) {
                 super(props);
+                
             }
 
-        
-
             render(){
-                console.log(this.props.reponse)
                 return(
                     <h2>
                         {this.props.title}
@@ -141,7 +171,7 @@
                 return(
                     <div>
                         <label htmlFor={this.props.label}>{this.props.label}</label>
-                        <input type={this.props.typeInput} required={this.props.obligatoire}/>
+                        <input name={this.props.name} onChange={this.props.handleChange} type={this.props.typeInput} required={this.props.obligatoire}/>
                     </div>
                 )
             }
@@ -156,7 +186,7 @@
             render(){
                 return(
                     <div>
-                        <select multiple={this.props.multiple}>
+                        <select name={this.props.name} onChange={this.props.handleChange} multiple={this.props.multiple} >
                             <option value="">--Please choose an option--</option>
                             {this.props.choices.map((choice,i) => {
                             return(
@@ -182,7 +212,7 @@
                         {this.props.choices.map((choice,i) => {
                             return(
                                 <div key={i} >
-                                    <input type="radio" name={this.props.name} id={choice} value={choice}/>
+                                    <input type="radio" name={this.props.name} onChange={this.props.handleChange} id={choice} value={choice}/>
                                     <label htmlFor={choice}>{choice}</label>
                                 </div>
                             )
@@ -196,14 +226,52 @@
             
             constructor(props) {
                 super(props);
+
+                this.propositionsObj = this.props.propositions
+                this.propositionsArr = []
+                this.reponses = this.props.reponses
+                this.reponsesArr = []
+
+                this.state = {
+                    score : 0
+                }
             }
 
+            checkScore = () =>{
+                this.propositionsArr.forEach(elem => {
+                    console.log(elem)
+                })
+            }
+
+            
+
             render(){
+                console.log(this.props.reponses)
+                this.propositionsArr = Object.keys(this.propositionsObj).map(function(key) {
+                    return [key, this.propositionsObj[key]];
+                })
+
+                this.reponsesArr = Object.keys(this.reponses).map(function(key) {
+                    return [key, this.reponses[key]];
+                })
+                
+
                 return(
                     <div>
-                    
+                        Voici votre score pour ce QCM : {this.state.score}/{this.reponsesArr.length}
+                        {propositionsArr.map((proposition,i) => {
+                            return(
+                                <p key={i} >
+                                   Q{i+1} : {proposition[1] === this.reponses[proposition[0]] ? "Bravo ! vous avez bien répondu." : "Dommage ce n'est pas juste"} {this.props.feedbacks[proposition[0]]}
+                                </p>
+                            )
+                        })}
                     </div>
                 )
+            }
+
+            compnentDidMount(){
+                this.checkScore()
             }
         }
 

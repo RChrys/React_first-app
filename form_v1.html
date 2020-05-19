@@ -80,10 +80,7 @@
             render(){
                 let reponseObj = {}
                 let feedbackObj = {}
-                let questionsArr = []
 
-                
-                
                 for (const property in questions){
                     reponseObj[property] = questions[property].choices[questions[property].response]
                     feedbackObj[property] = questions[property].feedback
@@ -122,7 +119,7 @@
 
             render(){
                 return(
-                    <div className={`wrapper ${this.props.className}`}>
+                    <div className={`wrapper ${this.props.className ? `${this.props.className}` : ``}`}>
                         {this.props.children}
                     </div>
                 )
@@ -170,7 +167,7 @@
 
             render(){
                 return(
-                    <div className={`input ${this.props.className}`}>
+                    <div className={`input ${this.props.className ? `${this.props.className}` : ``}`}>
                         <label htmlFor={this.props.label}>{this.props.label} {this.props.obligatoire ? "( * )" : "" }</label>
                         <input name={this.props.name} onChange={this.props.handleChange} type={this.props.typeInput} required={this.props.obligatoire}/>
                     </div>
@@ -186,7 +183,7 @@
 
             render(){
                 return(
-                    <div className={`select ${this.props.className}`}>
+                    <div className={`select ${this.props.className ? `${this.props.className}` : ``}`}>
                         <select name={this.props.name} onChange={this.props.handleChange} multiple={this.props.multiple} >
                             <option value="">--Please choose an option--</option>
                             {this.props.choices.map((choice,i) => {
@@ -208,7 +205,7 @@
 
             render(){
                 return(
-                    <div className={`radio ${this.props.className}`}>
+                    <div className={`radio ${this.props.className ? `${this.props.className}` : ``}`}>
                         <p>Répondez en choisissant une seule et bonne réponse ci-dessous :</p>
                         {this.props.choices.map((choice,i) => {
                             return(
@@ -247,8 +244,6 @@
                     })
                 })
             }
-
-            
 
             render(){
                 let propositions = this.props.propositions

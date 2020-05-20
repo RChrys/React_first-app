@@ -131,6 +131,7 @@
                                 <p>Voici un QCM sur React répondez aux questions ci-dessous, pensez à laisser votre email, champ obligatoire (*) :</p>
                                 <h1>QCM React</h1>
                                 <Input type="email" obligatoire={true} label="votre email" />
+                                <Avatar/>
                             </Wrapper>
                         </Form>
                         }
@@ -141,12 +142,13 @@
                             {this.questions.map((question,k)=>{
                                 const ComponentName = this.componentType[question.type]
                                 return(
-                                    (this.state.page === k) && <Wrapper key={k} index={k+1}>
-                                        <Question name={question.name} title={question.title} handleQuestion={this.addQuestion} />
-                                        <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
-                                        {(!this.state.page <= 0) && <Input typeInput="button" value="Précédent" handleClick={this.prevPage}/>}
-                                        {(this.state.page !== this.questions.length-1) &&  <Input typeInput="button" value="Suivant" handleClick={this.nextPage}/> }
-                                    </Wrapper>
+                                    (this.state.page === k) && 
+                                    <Navigation key={k} currentPage={this.state.page} nbrPages={this.questions.length-1} prevBtn={this.prevPage} nextBtn={this.nextPage}>
+                                        <Wrapper>
+                                            <Question name={question.name} title={question.title} handleQuestion={this.addQuestion} />
+                                            <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
+                                        </Wrapper>
+                                    </Navigation>
                                 )
                             })}
                         </Form>}
@@ -165,7 +167,7 @@
 
             render(){
                 return(
-                    <div className={`wrapper ${this.props.className ? `${this.props.className}` : ``}`} index={this.props.index}>
+                    <div className={`wrapper ${this.props.className ? `${this.props.className}` : ``}`}>
                         {this.props.children}
                     </div>
                 )
@@ -185,6 +187,25 @@
                         {this.props.children}
                         <input type="submit" value={this.props.btnValue} disabled={this.props.btnDisabled === true ? true : false} />
                     </form>
+                )
+            }
+        }
+
+
+        class Navigation extends React.Component{
+            
+            constructor(props) {
+                super(props);
+            }
+
+
+            render(){
+                return(
+                    <div>
+                        {this.props.children}
+                        {(!this.props.currentPage <= 0) && <Input typeInput="button" value="Précédent" handleClick={this.props.prevBtn}/>}
+                        {(this.props.currentPage !== this.props.nbrPages) &&  <Input typeInput="button" value="Suivant" handleClick={this.props.nextBtn}/> }
+                    </div>
                 )
             }
         }
@@ -269,6 +290,35 @@
                 )
             }
         }
+
+
+        class Avatar extends React.Component{
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    imageSource : null
+                }
+            }
+
+            imageLoad = (event) =>{
+                console.log(event.target.files[0].name)
+                this.setState({
+                    imageSource : event.target.files[0].name
+                })
+            }
+
+            render(){
+                return(
+                    <div className="imageInput">
+                        <Input typeInput="file" handleChange={this.imageLoad}/>
+                        <img src={this.state.imageSource}/>
+                    </div>
+                )
+            }
+
+        }
+
 
         class Resultat extends React.Component{
             

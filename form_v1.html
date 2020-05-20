@@ -107,14 +107,28 @@
                         <Form handleSubmit={this.handleSubmit} btnDisabled={this.state.questionCount === this.state.answerCount ? false : true}>
                             <Wrapper>
                                 <h1>QCM React</h1>
-                                <Input type="email" obligatoire={true} label="votre email" />
+                                <Input 
+                                    type="email" 
+                                    obligatoire={true} 
+                                    label="votre email" 
+                                />
                             </Wrapper>
+                            
                             {this.questions.map((question,k)=>{
                                 const ComponentName = this.componentType[question.type]
                                 return(
                                     <Wrapper key={k}>
-                                            <Question name={question.name} title={question.title} handleQuestion={this.addQuestion} />
-                                            <ComponentName name={question.name} choices={question.choices} handleChange={this.handleChange}/>
+                                            <Question 
+                                                name={question.name} 
+                                                title={question.title} 
+                                                handleQuestion={this.addQuestion} 
+                                            />
+                                            
+                                            <ComponentName 
+                                                name={question.name} 
+                                                choices={question.choices} 
+                                                handleChange={this.handleChange}
+                                            />
                                     </Wrapper>
                                 )
                             })}

@@ -30,6 +30,7 @@
         const Counter = () => {
             
             const [count, setCount] = React.useState(0);
+            const [active, setActive] = React.useState(false);
             const compt = React.useRef(null);
          
 
@@ -41,7 +42,8 @@
 
             const start = () => {
                 console.log("start")
-                compt.current = setInterval(()=>{setCount(count => count + 1)},1000)   
+                compt.current = setInterval(()=>{setCount(count => count + 1)},1000)
+                setActive(true)  
             }
 
             const restart = () => {
@@ -55,16 +57,17 @@
                 if(compt.current){
                     console.log("compt stop")
                     clearTimeout(compt.current);
+                    setActive(false) 
                 }
             }
 
             return (
                 <div>
                     <p>Count : {count}</p>
-                    {<button onClick={start}>
+                    {<button onClick={start} disabled={active}>
                         Start
                     </button>}
-                    {<button onClick={stop}>
+                    {<button onClick={stop} disabled={!active}>
                         Stop
                     </button>} 
                     {count > 0 && <button onClick={restart}>

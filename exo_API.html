@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello React</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <!-- compilation JSX => JS -->
+        <script type="text/babel">
+
+        const url = `https://jsonplaceholder.typicode.com/users`;
+        
+        const App = () => {
+
+            const [searchedValue, setSearchedValue] = React.useState("");
+            const datasUsers = useFetch(url)
+
+            return(
+                <React.Fragment>
+                    <Search handleChange={setSearchedValue}/>
+                    <Users users={datasUsers} searchedValue={searchedValue} />
+                </React.Fragment>              
+            )
+        }
+
+        const useFetch = (lien) => {
+
+            const [usersArr, setUsersArr] = React.useState([]);
+
+            async function getData() {
+
+                fetch(lien)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    setUsersArr(data)
+                })
+            }
+
+            React.useEffect(
+            () => {
+                // useEffect résout la fonction async
+                getData();
+            }, []
+            )
+
+            return usersArr
+        }
+
+        const Search = (props) => {
+
+            const search = (event) =>{
+                props.handleChange(event.target.value)
+
+            }
+            
+            return (
+                <div>
+                    <form>
+                        <div className="form-group">
+                            <label>Name</label>
+                            <input type="text" onChange={search}/>
+                            </div>
+                    </form>
+                </div>
+            );
+        }
+
+
+        const Users = (props) => {
+            return (
+                <ul>
+                    {props.users.map((user, k) => {
+                        if(user.name.toUpperCase().indexOf(props.searchedValue.toUpperCase()) > -1){
+                            return (
+                                <li key={k}>
+                                    {user.name}
+                                </li>
+                            );
+                        }
+                    })}
+                </ul>
+            );
+        }
+
+        const container = document.getElementById('root');
+        ReactDOM.render(
+            <App />,
+            container
+        );
+
+
+        
+        </script>
+    </body>
+</html>

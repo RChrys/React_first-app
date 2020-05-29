@@ -31,7 +31,7 @@
 
             const [usersArr, setUsersArr] = React.useState([]);
 
-            async function getData() {
+            const getData = async() => {
 
                 fetch(lien)
                 .then(response => {
@@ -45,7 +45,7 @@
             React.useEffect(
             () => {
                 getData();
-            }, []
+            }, [lien]
             )
 
             return usersArr
